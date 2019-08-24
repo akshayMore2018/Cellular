@@ -1,5 +1,5 @@
 #include "CEngine.h"
-#include <GLFW/glfw3.h>
+#include "CWindow.h"
 #include <iostream>
 
 CEngine::CEngine():mWindow(nullptr)
@@ -9,38 +9,23 @@ CEngine::CEngine():mWindow(nullptr)
 
 CEngine::~CEngine()
 {
-
+	delete mWindow;
 }
 
 bool CEngine::initialize(int width, int height, const char * title)
 {
-	if (!glfwInit())
-		return false;
-
-	mWindow = glfwCreateWindow(width, height, title, NULL, NULL);
-	if (!mWindow)
-	{
-		glfwTerminate();
-		return false;
-	}
-
-	glfwMakeContextCurrent(mWindow);
-
-	return true;
+	mWindow = new CWindow();
+	return mWindow->createWindow(width, height, title);
 }
 
 void CEngine::run()
 {
-	while (!glfwWindowShouldClose(mWindow))
+	while (mWindow->isOpen())
 	{
-		glClearColor(0.1f, 0.0f, 1.0f, 1.0f);
+		mWindow->clearBuffer(0.1f, 0.1f, 0.2f, 1.0f);
+		
+		mWindow->swapBuffers();
 
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		glfwSwapBuffers(mWindow);
-
-		glfwPollEvents();
 	}
-
-	glfwTerminate();
+	mWindow->closeWindow();
 }

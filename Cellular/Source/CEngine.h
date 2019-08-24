@@ -10,5 +10,5 @@ public:
 	void run();
 
 private:
-	class GLFWwindow* mWindow;
+	class CWindow* mWindow;
 };
