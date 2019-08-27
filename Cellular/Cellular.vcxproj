@@ -20,11 +20,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\CEngine.cpp" />
+    <ClCompile Include="Source\CRenderer.cpp" />
     <ClCompile Include="Source\CWindow.cpp" />
     <ClCompile Include="Source\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\CEngine.h" />
+    <ClInclude Include="Source\CRenderer.h" />
     <ClInclude Include="Source\CWindow.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

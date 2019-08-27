@@ -16,12 +16,18 @@
     <ClCompile Include="Source\CWindow.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\CRenderer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\CEngine.h">
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Source\CWindow.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CRenderer.h">
       <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>

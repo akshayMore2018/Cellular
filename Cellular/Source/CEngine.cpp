@@ -1,6 +1,7 @@
 #include "CEngine.h"
 #include "CWindow.h"
 #include <iostream>
+#include "GL/glew.h"
 
 CEngine::CEngine():mWindow(nullptr)
 {
@@ -22,7 +23,9 @@ void CEngine::run()
 {
 	while (mWindow->isOpen())
 	{
-		mWindow->clearBuffer(0.1f, 0.1f, 0.2f, 1.0f);
+		glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
+
+		glClear(GL_COLOR_BUFFER_BIT);
 		
 		mWindow->swapBuffers();
 
