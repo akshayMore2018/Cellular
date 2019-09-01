@@ -1,5 +1,6 @@
 #pragma once
 
+void framebuffer_size_callback(class GLFWwindow* window, int width, int height);
 class CEngine
 {
 public:
@@ -10,5 +11,7 @@ public:
 	void run();
 
 private:
-	class CWindow* mWindow;
+
+	class GLFWwindow* mWindow;
+
 };
