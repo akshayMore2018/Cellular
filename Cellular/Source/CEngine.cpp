@@ -88,8 +88,8 @@ void CEngine::InitData()
 	glEnableVertexAttribArray(0);
 
 
-	Shader* BasicShader = new Shader("Source/Shaders/");
-	ShaderProgram = BasicShader->GetShaderprogramID();
+	Shader BasicShader = Shader("Source/Shaders/");
+	ShaderProgram = BasicShader.GetShaderprogramID();
 
 }
 
