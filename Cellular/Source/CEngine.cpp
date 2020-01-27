@@ -66,6 +66,10 @@ void CEngine::run()
 
 void CEngine::InitData()
 {
+	int AttributeCount;
+	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &AttributeCount);
+	C_LOG("Maximum number of vertex attributes supported :%d\n",AttributeCount);
+
 	float vertices[] =
 	{
 		-0.5f, -0.5f, 0.0f,

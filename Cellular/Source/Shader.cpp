@@ -21,7 +21,7 @@ Shader::Shader(const std::string& filepath)
 	glGetProgramiv(ShaderProgram, GL_LINK_STATUS, &success);
 	if (!success) {
 		glGetProgramInfoLog(ShaderProgram, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+		C_LOG("ERROR::SHADER::PROGRAM::LINKING_FAILED\n:%s\n", infoLog);
 	}
 	glDeleteShader(VertexShader);
 	glDeleteShader(FragmentShader);
@@ -35,7 +35,7 @@ std::string Shader::GetFileAsString(const std::string & filepath) const
 
 	if (Stream.fail())
 	{
-		std::cout << "could not find the file + "<<filepath<< std::endl;
+		C_LOG("could not find the file : %s/n",filepath);
 	}
 
 	while (getline(Stream, line))
@@ -60,7 +60,8 @@ unsigned int Shader::CreateShader(unsigned int Type,const std::string & Source)
 	if (!success)
 	{
 		glGetShaderInfoLog(ShaderID, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::"<<Type<<"::COMPILATION_FAILED\n" << infoLog << std::endl;
+		const char* ShaderType = (Type == GL_VERTEX_SHADER) ? "VertexShader" : "FragmentShader";
+		C_LOG("ERROR::SHADER:: %s ::COMPILATION_FAILED\n:%s\n", ShaderType, infoLog);
 	}
 
 	return ShaderID;

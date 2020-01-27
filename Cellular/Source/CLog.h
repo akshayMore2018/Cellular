@@ -1,6 +1,4 @@
 #pragma once
 
-#define C_LOG(x)				\
-{								\
-	std::cout<<#x<<std::endl;	\
-}
+#define C_LOG(...) { printf(__VA_ARGS__); }				\
+

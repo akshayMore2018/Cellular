@@ -3,6 +3,7 @@
 #include "GL/glew.h"
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include "CLog.h"
 void framebuffer_size_callback(class GLFWwindow* window, int width, int height);
 class CEngine
 {
