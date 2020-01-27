@@ -45,25 +45,6 @@ bool CEngine::initialize(int width, int height, const char * title)
 	return true;
 }
 
-void CEngine::run()
-{
-	while (!glfwWindowShouldClose(mWindow))
-	{
-		glClearColor(0.1f,0.0f,0.5f,1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-
-		glUseProgram(ShaderProgram);
-		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-		glBindVertexArray(0);
-
-
-		glfwSwapBuffers(mWindow);		
-		glfwPollEvents();
-	}
-}
-
 void CEngine::InitData()
 {
 	int AttributeCount;
@@ -88,14 +69,33 @@ void CEngine::InitData()
 	//copy the data into the bound buffer.
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+	//position attrib
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
 
 	Shader BasicShader = Shader("Source/Shaders/");
 	ShaderProgram = BasicShader.GetShaderprogramID();
-
+	glUseProgram(ShaderProgram);
+	BasicShader.SetFloat3("ourColor",0.0f,0.5f,0.0f);
 }
+
+void CEngine::run()
+{
+	while (!glfwWindowShouldClose(mWindow))
+	{
+		glClearColor(0.1f, 0.0f, 0.5f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glBindVertexArray(0);
+
+		glfwSwapBuffers(mWindow);
+		glfwPollEvents();
+	}
+}
+
 
 void framebuffer_size_callback(GLFWwindow * window, int width, int height)
 {

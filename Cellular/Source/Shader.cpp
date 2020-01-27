@@ -27,6 +27,26 @@ Shader::Shader(const std::string& filepath)
 	glDeleteShader(FragmentShader);
 }
 
+void Shader::SetBool(const std::string & Name, bool Value) const
+{
+	glUniform1i(glGetUniformLocation(ShaderProgram, Name.c_str()), (int)Value);
+}
+
+void Shader::SetInt(const std::string & Name, int Value) const
+{
+	glUniform1i(glGetUniformLocation(ShaderProgram, Name.c_str()), Value);
+}
+
+void Shader::SetFloat1(const std::string & Name, float Value) const
+{
+	glUniform1f(glGetUniformLocation(ShaderProgram, Name.c_str()), Value);
+}
+
+void Shader::SetFloat3(const std::string & Name, float X, float Y, float Z) const
+{
+	glUniform3f(glGetUniformLocation(ShaderProgram, Name.c_str()), X,Y,Z);
+}
+
 std::string Shader::GetFileAsString(const std::string & filepath) const
 {
 	std::ifstream Stream(filepath);
