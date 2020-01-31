@@ -4,6 +4,12 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "CLog.h"
+
+//GLM includes
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 class CEngine
 {
