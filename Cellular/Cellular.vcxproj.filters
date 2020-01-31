@@ -8,6 +8,12 @@
     <Filter Include="Source\Shaders">
       <UniqueIdentifier>{f195359c-3cde-416a-a083-908cbb42f9c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Content">
+      <UniqueIdentifier>{851904a8-a701-441c-80c8-b89ac9d25783}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Content\Textures">
+      <UniqueIdentifier>{3f69ede6-16b9-46dd-a4f5-5cc5bff51aac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -27,6 +33,9 @@
     <ClInclude Include="Source\Shader.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Source\stb_image.h">
+      <Filter>Source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Shaders\vertex.shader">
@@ -35,5 +44,10 @@
     <None Include="Source\Shaders\fragment.shader">
       <Filter>Source\Shaders</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Content\Textures\uchiha.png">
+      <Filter>Content\Textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>

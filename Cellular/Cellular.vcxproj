@@ -26,10 +26,14 @@
   <ItemGroup>
     <ClInclude Include="Source\CEngine.h" />
     <ClInclude Include="Source\Shader.h" />
+    <ClInclude Include="Source\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Shaders\fragment.shader" />
     <None Include="Source\Shaders\vertex.shader" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Content\Textures\uchiha.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

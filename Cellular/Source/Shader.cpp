@@ -55,7 +55,7 @@ std::string Shader::GetFileAsString(const std::string & filepath) const
 
 	if (Stream.fail())
 	{
-		C_LOG("could not find the file : %s/n",filepath);
+		C_LOG("could not find the file : %s/n",filepath.c_str());
 	}
 
 	while (getline(Stream, line))

@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "CLog.h"
-void framebuffer_size_callback(class GLFWwindow* window, int width, int height);
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 class CEngine
 {
 public:
@@ -16,7 +16,7 @@ public:
 
 private:
 
-	class GLFWwindow* mWindow;
+	GLFWwindow* mWindow;
 
 
 	void InitData();
