@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include "CEngine.h"
 
 class Shader
 {
@@ -11,8 +12,9 @@ public:
 
 	void SetBool(const std::string& Name, bool Value)const;
 	void SetInt(const std::string& Name, int Value)const;
-	void SetFloat1(const std::string& Name, float Value)const;
-	void SetFloat3(const std::string& Name, float X, float Y, float Z)const;
+	void SetFloat(const std::string& Name, float Value)const;
+	void SetVec3(const std::string& Name, float X, float Y, float Z)const;
+	void SetMat4(const std::string& Name, const glm::mat4& mat)const;
 
 private:
 

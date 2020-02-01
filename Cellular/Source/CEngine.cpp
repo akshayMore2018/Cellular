@@ -4,6 +4,7 @@
 #include "Shader.h"
 #include "TextureManager.h"
 
+
 CEngine::CEngine():mWindow(nullptr)
 {
 
@@ -119,6 +120,12 @@ void CEngine::InitData()
 	BasicShader.SetInt("Texture1", 0);
 	BasicShader.SetInt("Texture2", 1);
 
+
+	glm::mat4 Trans = glm::mat4(1.0f);
+	Trans = glm::rotate(Trans,glm::radians(90.0f),glm::vec3(0.0f,0.0f,1.0f));
+	Trans = glm::scale(Trans,glm::vec3(0.5f,0.5f,0.5f));
+
+	BasicShader.SetMat4("transform", Trans);
 }
 
 void CEngine::run()

@@ -1,7 +1,6 @@
 #include "Shader.h"
 #include <fstream>
 #include <sstream>
-#include "CEngine.h"
 
 Shader::Shader(const std::string& filepath)
 {
@@ -37,14 +36,19 @@ void Shader::SetInt(const std::string & Name, int Value) const
 	glUniform1i(glGetUniformLocation(ShaderProgram, Name.c_str()), Value);
 }
 
-void Shader::SetFloat1(const std::string & Name, float Value) const
+void Shader::SetFloat(const std::string & Name, float Value) const
 {
 	glUniform1f(glGetUniformLocation(ShaderProgram, Name.c_str()), Value);
 }
 
-void Shader::SetFloat3(const std::string & Name, float X, float Y, float Z) const
+void Shader::SetVec3(const std::string & Name, float X, float Y, float Z) const
 {
 	glUniform3f(glGetUniformLocation(ShaderProgram, Name.c_str()), X,Y,Z);
+}
+
+void Shader::SetMat4(const std::string & Name, const glm::mat4 & mat) const
+{
+	glUniformMatrix4fv(glGetUniformLocation(ShaderProgram, Name.c_str()), 1, GL_FALSE, &mat[0][0]);
 }
 
 std::string Shader::GetFileAsString(const std::string & filepath) const
