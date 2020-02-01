@@ -2,8 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include "Shader.h"
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include "TextureManager.h"
 
 CEngine::CEngine():mWindow(nullptr)
 {
@@ -12,6 +11,9 @@ CEngine::CEngine():mWindow(nullptr)
 
 CEngine::~CEngine()
 {
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
 	glfwTerminate();
 }
 
@@ -49,29 +51,11 @@ bool CEngine::initialize(int width, int height, const char * title)
 
 void CEngine::InitData()
 {
-	glGenTextures(1,&Texture);
-	glBindTexture(GL_TEXTURE_2D,Texture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	int width, height, nrChannels;
-
-	unsigned char *data = stbi_load("Content/Textures/Uchiha.png", &width, &height, &nrChannels, 0);
-
-	if (data)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else
-	{
-		C_LOG("Failed to load Texture\n");
-	}
-
-	stbi_image_free(data);
-
+	if (!TextureManager::GetInstance().TextureMap.count("Content/Textures/Uchiha.png") == 1)
+		TextureManager::GetInstance().LoadTexture("Content/Textures/Uchiha.png");
+	Texture* Tex = TextureManager::GetInstance().TextureMap["Content/Textures/Uchiha.png"];
+	if(Tex!=nullptr)
+	TextureID = Tex->GetTextureID();
 
 	int AttributeCount;
 	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &AttributeCount);
@@ -120,7 +104,7 @@ void CEngine::InitData()
 	Shader BasicShader = Shader("Source/Shaders/");
 	ShaderProgram = BasicShader.GetShaderprogramID();
 	glUseProgram(ShaderProgram);
-	glBindTexture(GL_TEXTURE_2D, Texture);
+	glBindTexture(GL_TEXTURE_2D, TextureID);
 }
 
 void CEngine::run()
@@ -135,12 +119,6 @@ void CEngine::run()
 		glfwSwapBuffers(mWindow);
 		glfwPollEvents();
 	}
-
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
-
-	glfwTerminate();
 }
 
 
