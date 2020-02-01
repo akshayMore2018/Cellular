@@ -30,4 +30,5 @@ private:
 	unsigned int ShaderProgram;
 	unsigned int VAO , VBO , EBO;
 	unsigned int TextureID;
+	unsigned int TextureID2;
 };

@@ -51,11 +51,19 @@ bool CEngine::initialize(int width, int height, const char * title)
 
 void CEngine::InitData()
 {
-	if (!TextureManager::GetInstance().TextureMap.count("Content/Textures/Uchiha.png") == 1)
-		TextureManager::GetInstance().LoadTexture("Content/Textures/Uchiha.png");
-	Texture* Tex = TextureManager::GetInstance().TextureMap["Content/Textures/Uchiha.png"];
+	if (!TextureManager::GetInstance().TextureMap.count("Content/Textures/Crate.jpg") == 1)
+		TextureManager::GetInstance().LoadTexture("Content/Textures/Crate.jpg");
+	Texture* Tex = TextureManager::GetInstance().TextureMap["Content/Textures/Crate.jpg"];
 	if(Tex!=nullptr)
 	TextureID = Tex->GetTextureID();
+
+
+	if (!TextureManager::GetInstance().TextureMap.count("Content/Textures/Sublime.jpg") == 1)
+		TextureManager::GetInstance().LoadTexture("Content/Textures/Sublime.jpg");
+	Tex = TextureManager::GetInstance().TextureMap["Content/Textures/Sublime.jpg"];
+	if (Tex != nullptr)
+		TextureID2 = Tex->GetTextureID();
+
 
 	int AttributeCount;
 	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &AttributeCount);
@@ -104,7 +112,13 @@ void CEngine::InitData()
 	Shader BasicShader = Shader("Source/Shaders/");
 	ShaderProgram = BasicShader.GetShaderprogramID();
 	glUseProgram(ShaderProgram);
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, TextureID);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, TextureID2);
+	BasicShader.SetInt("Texture1", 0);
+	BasicShader.SetInt("Texture2", 1);
+
 }
 
 void CEngine::run()
