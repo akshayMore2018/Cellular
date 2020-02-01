@@ -4,8 +4,6 @@
 
 class TextureManager
 {
-	static TextureManager* Instance;
-
 	TextureManager(); // prevent construction from outside
 	TextureManager(const TextureManager&);//prevent construction by copying
 	TextureManager& operator=(const TextureManager&); //prevent assignment

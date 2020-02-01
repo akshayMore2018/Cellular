@@ -4,8 +4,6 @@
 #include "stb_image.h"
 
 
-TextureManager* TextureManager::Instance = 0;
-
 TextureManager::TextureManager()
 {
 }
