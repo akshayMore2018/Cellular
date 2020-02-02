@@ -154,7 +154,7 @@ void CEngine::InitData()
 
 
 	glm::mat4 Model = glm::mat4(1.0f);
-	Model = glm::rotate(Model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	Model = glm::rotate(Model, glm::radians(-55.0f), glm::vec3(1.0f, 0.5f, 0.0f));
 	
 
 	glm::mat4 View = glm::mat4(1.0f);
