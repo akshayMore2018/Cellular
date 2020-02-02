@@ -2,7 +2,7 @@
 class Texture
 {
 public:
-	Texture(unsigned int ID,int Width,int Height) 
+	Texture(unsigned int ID, unsigned int Width, unsigned int Height)
 	{
 		this->ID		= ID;
 		this->Width		= Width;
@@ -15,6 +15,6 @@ public:
 
 private:
 	unsigned int ID;
-	int Width;
-	int Height;
+	unsigned int Width;
+	unsigned int Height;
 };

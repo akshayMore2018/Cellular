@@ -1,12 +1,12 @@
 #pragma once
-#include <iostream>
 #include "CEngine.h"
 
 class Shader
 {
 public:
-
 	Shader(const std::string& filepath);
+	
+	Shader() = default;
 
 	inline unsigned int GetShaderprogramID()const { return ShaderProgram; }
 

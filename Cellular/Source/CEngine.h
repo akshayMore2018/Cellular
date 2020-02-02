@@ -10,6 +10,8 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 
+class Mesh;
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 class CEngine
 {
@@ -17,18 +19,17 @@ public:
 	CEngine();
 	~CEngine();
 
-	bool initialize(int width,int height,const char* title);
-	void run();
+	bool Initialize(int width,int height,const char* title);
+	void Start();
 
 private:
-
-	GLFWwindow* mWindow;
-
-
 	void InitData();
 
+private:
 	unsigned int ShaderProgram;
-	unsigned int VAO , VBO;
 	unsigned int TextureID;
 	unsigned int TextureID2;
+
+	GLFWwindow	*mWindow;
+	Mesh		*CubeMesh;
 };

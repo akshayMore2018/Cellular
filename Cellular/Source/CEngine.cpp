@@ -1,23 +1,24 @@
 #include "CEngine.h"
 #include <fstream>
 #include <sstream>
-#include "Shader.h"
 #include "TextureManager.h"
+#include "Shader.h"
+#include "Mesh.h"
 
-
-CEngine::CEngine():mWindow(nullptr)
+CEngine::CEngine()
+	: mWindow(nullptr)
+	, CubeMesh(nullptr)
 {
 
 }
 
 CEngine::~CEngine()
 {
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
+	delete CubeMesh;
 	glfwTerminate();
 }
 
-bool CEngine::initialize(int width, int height, const char * title)
+bool CEngine::Initialize(int width, int height, const char * title)
 {
 	if (!glfwInit())
 		return false;
@@ -51,93 +52,83 @@ bool CEngine::initialize(int width, int height, const char * title)
 
 void CEngine::InitData()
 {
-
 	glEnable(GL_DEPTH_TEST);
 
 	if (!TextureManager::GetInstance().TextureMap.count("Content/Textures/Crate.jpg") == 1)
+	{
 		TextureManager::GetInstance().LoadTexture("Content/Textures/Crate.jpg");
+	}
 	Texture* Tex = TextureManager::GetInstance().TextureMap["Content/Textures/Crate.jpg"];
-	if(Tex!=nullptr)
-	TextureID = Tex->GetTextureID();
+	if (Tex != nullptr)
+	{
+		TextureID = Tex->GetTextureID();
+	}
 
 
 	if (!TextureManager::GetInstance().TextureMap.count("Content/Textures/Sublime.jpg") == 1)
+	{
 		TextureManager::GetInstance().LoadTexture("Content/Textures/Sublime.jpg");
+	}
 	Tex = TextureManager::GetInstance().TextureMap["Content/Textures/Sublime.jpg"];
 	if (Tex != nullptr)
+	{
 		TextureID2 = Tex->GetTextureID();
-
+	}
 
 	int AttributeCount;
 	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &AttributeCount);
 	C_LOG("Maximum number of vertex attributes supported :%d\n",AttributeCount);
 
-
-	float vertices[] =
+	std::vector<Vertex> Verts
 	{
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+		{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 0.0f)},
+		{glm::vec3( 0.5f, -0.5f, -0.5f), glm::vec2(1.0f, 0.0f)},
+		{glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec2(1.0f, 1.0f)},
+		{glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec2(1.0f, 1.0f)},
+		{glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec2(0.0f, 1.0f)},
+		{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 0.0f)},
 
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		{glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec2(0.0f, 0.0f)},
+		{glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec2(1.0f, 0.0f)},
+		{glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec2(1.0f, 1.0f)},
+		{glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec2(1.0f, 1.0f)},
+		{glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec2(0.0f, 1.0f)},
+		{glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec2(0.0f, 0.0f)},
 
-		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		{glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec2(1.0f, 0.0f)},
+		{glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec2(1.0f, 1.0f)},
+		{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 1.0f)},
+		{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 1.0f)},
+		{glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec2(0.0f, 0.0f)},
+		{glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec2(1.0f, 0.0f)},
 
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		{glm::vec3(0.5f,  0.5f,  0.5f), glm::vec2(1.0f, 0.0f)},
+		{glm::vec3(0.5f,  0.5f, -0.5f), glm::vec2(1.0f, 1.0f)},
+		{glm::vec3(0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 1.0f)},
+		{glm::vec3(0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 1.0f)},
+		{glm::vec3(0.5f, -0.5f,  0.5f), glm::vec2(0.0f, 0.0f)},
+		{glm::vec3(0.5f,  0.5f,  0.5f), glm::vec2(1.0f, 0.0f)},
 
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 1.0f)},
+		{glm::vec3( 0.5f, -0.5f, -0.5f), glm::vec2(1.0f, 1.0f)},
+		{glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec2(1.0f, 0.0f)},
+		{glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec2(1.0f, 0.0f)},
+		{glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec2(0.0f, 0.0f)},
+		{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 1.0f)},
 
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+		{glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec2(0.0f, 1.0f)},
+		{glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec2(1.0f, 1.0f)},
+		{glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec2(1.0f, 0.0f)},
+		{glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec2(1.0f, 0.0f)},
+		{glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec2(0.0f, 0.0f)},
+		{glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec2(0.0f, 1.0f)}
+
 	};
 
 
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
+	CubeMesh = new Mesh();
+	CubeMesh->InitMesh(Verts);
 
-	glBindVertexArray(VAO);// Bind the VAO and any subsequent vertex attribute calls from this point on will be stored inside the VAO.
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-
-
-	//position attrib
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	//texture attrib
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-
-	
 
 	Shader BasicShader = Shader("Source/Shaders/");
 	ShaderProgram = BasicShader.GetShaderprogramID();
@@ -148,10 +139,6 @@ void CEngine::InitData()
 	glBindTexture(GL_TEXTURE_2D, TextureID2);
 	BasicShader.SetInt("Texture1", 0);
 	BasicShader.SetInt("Texture2", 1);
-
-
-	glm::ortho(0.0f, 800.0f, 0.0f, 600.0f, 0.1f, 100.0f);
-
 
 	glm::mat4 Model = glm::mat4(1.0f);
 	Model = glm::rotate(Model, glm::radians(-55.0f), glm::vec3(1.0f, 0.5f, 0.0f));
@@ -170,14 +157,14 @@ void CEngine::InitData()
 	BasicShader.SetMat4("projection", Projection);
 }
 
-void CEngine::run()
+void CEngine::Start()
 {
 	while (!glfwWindowShouldClose(mWindow))
 	{
 		glClearColor(0.1f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		CubeMesh->Render();
 
 		glfwSwapBuffers(mWindow);
 		glfwPollEvents();
