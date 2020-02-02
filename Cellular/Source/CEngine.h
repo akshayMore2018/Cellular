@@ -28,7 +28,7 @@ private:
 	void InitData();
 
 	unsigned int ShaderProgram;
-	unsigned int VAO , VBO , EBO;
+	unsigned int VAO , VBO;
 	unsigned int TextureID;
 	unsigned int TextureID2;
 };
