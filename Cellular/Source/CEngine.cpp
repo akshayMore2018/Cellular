@@ -4,10 +4,13 @@
 #include "TextureManager.h"
 #include "Shader.h"
 #include "Mesh.h"
+#include "CCamera.h"
 
 CEngine::CEngine()
 	: mWindow(nullptr)
 	, CubeMesh(nullptr)
+	, DefaultShader(nullptr)
+	, Camera(nullptr)
 {
 
 }
@@ -15,6 +18,8 @@ CEngine::CEngine()
 CEngine::~CEngine()
 {
 	delete CubeMesh;
+	delete DefaultShader;
+	delete Camera;
 	glfwTerminate();
 }
 
@@ -130,39 +135,61 @@ void CEngine::InitData()
 	CubeMesh->InitMesh(Verts);
 
 
-	Shader BasicShader = Shader("Source/Shaders/");
-	ShaderProgram = BasicShader.GetShaderprogramID();
+	DefaultShader = new Shader("Source/Shaders/");
+	ShaderProgram = DefaultShader->GetShaderprogramID();
+
+	Camera = new CCamera();
+	
+	
 	glUseProgram(ShaderProgram);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, TextureID);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, TextureID2);
-	BasicShader.SetInt("Texture1", 0);
-	BasicShader.SetInt("Texture2", 1);
+	DefaultShader->SetInt("Texture1", 0);
+	DefaultShader->SetInt("Texture2", 1);
+
 
 	glm::mat4 Model = glm::mat4(1.0f);
 	Model = glm::rotate(Model, glm::radians(-55.0f), glm::vec3(1.0f, 0.5f, 0.0f));
-	
-
-	glm::mat4 View = glm::mat4(1.0f);
-	View = glm::translate(View, glm::vec3(0.0f, 0.0f, -3.0f));
-
+	Model = glm::scale(Model, glm::vec3(1.0f, 1.0f, 1.0f));
+	DefaultShader->SetMat4("model", Model);
 
 	glm::mat4 Projection;
 	Projection = glm::perspective(glm::radians(45.0f), 8000.0f / 6000.0f, 0.1f, 100.0f);
+	DefaultShader->SetMat4("projection", Projection);
+}
 
+void CEngine::HandleEvents()
+{
+	if (glfwGetKey(mWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(mWindow, true);
 
-	BasicShader.SetMat4("model", Model);
-	BasicShader.SetMat4("view", View);
-	BasicShader.SetMat4("projection", Projection);
+	Camera->Events(mWindow);
+
 }
 
 void CEngine::Start()
 {
+	float LastFrame = 0.0f;
 	while (!glfwWindowShouldClose(mWindow))
 	{
 		glClearColor(0.1f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+		float CurrentFrame = glfwGetTime();
+		float DeltaTime = CurrentFrame - LastFrame;
+		LastFrame = CurrentFrame;
+
+		HandleEvents();
+
+		Camera->Update(DeltaTime);
+
+
+		glm::mat4 View = glm::mat4(1.0f);
+		View = glm::lookAt(Camera->GetPosition(), Camera->GetPosition() + Camera->GetForardVector(), Camera->GetUpVector());
+		DefaultShader->SetMat4("view", View);
 
 		CubeMesh->Render();
 

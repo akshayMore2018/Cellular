@@ -11,6 +11,8 @@
 #include <gtc/type_ptr.hpp>
 
 class Mesh;
+class Shader;
+class CCamera;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 class CEngine
@@ -24,6 +26,7 @@ public:
 
 private:
 	void InitData();
+	void HandleEvents();
 
 private:
 	unsigned int ShaderProgram;
@@ -32,4 +35,6 @@ private:
 
 	GLFWwindow	*mWindow;
 	Mesh		*CubeMesh;
+	Shader		*DefaultShader;
+	CCamera		*Camera;
 };

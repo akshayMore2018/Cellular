@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\CCamera.cpp" />
     <ClCompile Include="Source\CEngine.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Mesh.cpp" />
@@ -26,6 +27,7 @@
     <ClCompile Include="Source\TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\CCamera.h" />
     <ClInclude Include="Source\CEngine.h" />
     <ClInclude Include="Source\Mesh.h" />
     <ClInclude Include="Source\Shader.h" />
