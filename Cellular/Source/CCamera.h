@@ -11,7 +11,7 @@ public:
 
 	//Getters
 	glm::vec3 GetPosition()const;
-	glm::vec3 GetForardVector()const;
+	glm::vec3 GetForwardVector()const;
 	glm::vec3 GetUpVector()const;
 
 

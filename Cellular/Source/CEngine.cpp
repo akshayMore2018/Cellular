@@ -188,7 +188,7 @@ void CEngine::Start()
 
 
 		glm::mat4 View = glm::mat4(1.0f);
-		View = glm::lookAt(Camera->GetPosition(), Camera->GetPosition() + Camera->GetForardVector(), Camera->GetUpVector());
+		View = glm::lookAt(Camera->GetPosition(), Camera->GetPosition() + Camera->GetForwardVector(), Camera->GetUpVector());
 		DefaultShader->SetMat4("view", View);
 
 		CubeMesh->Render();
