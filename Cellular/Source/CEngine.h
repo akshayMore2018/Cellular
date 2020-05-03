@@ -15,6 +15,8 @@ class Shader;
 class CCamera;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+
+
 class CEngine
 {
 public:
