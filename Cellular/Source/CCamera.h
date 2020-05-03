@@ -8,6 +8,7 @@ public:
 	CCamera();
 	void Update(float DeltaTime);
 	void Events(GLFWwindow *mWindow);
+	void UpdateCameraVectors();
 
 	//Getters
 	glm::vec3 GetPosition()const;
@@ -20,6 +21,8 @@ private:
 	glm::vec3 Position;
 	glm::vec3 ForwardVector;
 	glm::vec3 UpVector;
+	glm::vec3 RightVector;
+	glm::vec3 WorldUp;
 	glm::vec3 Velocity;
 
 	bool firstMouse;
@@ -28,5 +31,6 @@ private:
 	float lastX ; 
 	float lastY ;
 	float fov	;
+	float Speed;
 
 };

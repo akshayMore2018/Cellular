@@ -156,7 +156,7 @@ void CEngine::InitData()
 	DefaultShader->SetMat4("model", Model);
 
 	glm::mat4 Projection;
-	Projection = glm::perspective(glm::radians(45.0f), 8000.0f / 6000.0f, 0.1f, 100.0f);
+	Projection = glm::perspective(glm::radians(45.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 	DefaultShader->SetMat4("projection", Projection);
 }
 
