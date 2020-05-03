@@ -5,7 +5,7 @@ int main()
 {
 	auto engine = std::make_unique<CEngine>();
 
-	bool success = engine->Initialize(640, 480, "Cellular");
+	bool success = engine->Initialize(SCREEN_WIDTH, SCREEN_HEIGHT, "Cellular");
 
 	if (success)
 	{

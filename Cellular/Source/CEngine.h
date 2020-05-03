@@ -10,6 +10,9 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 
+const int SCREEN_WIDTH	= 1024;
+const int SCREEN_HEIGHT = 768;
+
 class Mesh;
 class Shader;
 class CCamera;
