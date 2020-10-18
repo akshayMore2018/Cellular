@@ -151,8 +151,8 @@ void CEngine::InitData()
 
 
 	glm::mat4 Model = glm::mat4(1.0f);
-	Model = glm::rotate(Model, glm::radians(-55.0f), glm::vec3(1.0f, 0.5f, 0.0f));
-	Model = glm::scale(Model, glm::vec3(1.0f, 1.0f, 1.0f));
+	Model = glm::rotate(Model, glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	Model = glm::scale(Model, glm::vec3(15.0f, 1.0f, 15.0f));
 	DefaultShader->SetMat4("model", Model);
 
 	glm::mat4 Projection;

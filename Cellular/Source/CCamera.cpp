@@ -4,14 +4,14 @@
 
 CCamera::CCamera()
 {
-	Position		= glm::vec3(0.0f, 0.0f, 3.0f);
+	Position		= glm::vec3(0.0f, 15.0f, 30.0f);
 	Velocity		= glm::vec3(0.0f, 0.0f, 0.0f);
 	WorldUp			= glm::vec3(0.0f, 1.0f, 0.0f);
 
 	firstMouse		= true;
 
 	yaw				= -90.0f;	// yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a direction vector pointing to the right so we initially rotate a bit to the left.
-	pitch			= 0.0f;
+	pitch			= -20.0f;
 	lastX			= SCREEN_WIDTH / 2.0;
 	lastY			= SCREEN_HEIGHT / 2.0;
 	fov				= 45.0f;
@@ -25,8 +25,6 @@ CCamera::CCamera()
 void CCamera::Update(float DeltaTime)
 {
 	Position += Velocity * DeltaTime;
-	//if don't do this the camera acts wierd.
-	Position.y = 0.0f;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -39,8 +37,10 @@ void CCamera::Events(GLFWwindow *mWindow)
 		double xpos = 0.0;
 		double ypos = 0.0;
 		glfwGetCursorPos(mWindow, &xpos, &ypos);
-
-		bool CursorInBounds = (xpos > 0 && xpos < SCREEN_WIDTH && ypos > 0 && ypos < SCREEN_HEIGHT);
+		int w = 0;
+		int h = 0;
+		glfwGetWindowSize(mWindow,&w, &h);//handle resizing of window and hence passing updated dimensions
+		bool CursorInBounds = (xpos > 0 && xpos < w && ypos > 0 && ypos < h);
 		
 		if (CursorInBounds)
 		{
@@ -70,7 +70,7 @@ void CCamera::Events(GLFWwindow *mWindow)
 				pitch = -89.0f;
 
 			UpdateCameraVectors();
-			
+			C_LOG("Pitch :%f\n", pitch);
 		}
 		else
 		{
