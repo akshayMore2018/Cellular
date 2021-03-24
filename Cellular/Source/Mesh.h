@@ -18,6 +18,7 @@ public:
 
 	void InitMesh(std::vector<Vertex> Vertices);
 	void Render();
+	const unsigned int& GetVAO() { return VAO; }
 
 private:
 	unsigned int VAO;

@@ -158,6 +158,86 @@ void CEngine::InitData()
 	glm::mat4 Projection;
 	Projection = glm::perspective(glm::radians(45.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 	DefaultShader->SetMat4("projection", Projection);
+
+	//Skybox related stuff
+
+	float skyboxVertices[] = {
+		// positions          
+		-1.0f,  1.0f, -1.0f,
+		-1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		-1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f
+	};
+
+
+	unsigned int skyboxVBO;
+	glGenVertexArrays(1, &skyboxVAO);
+	glGenBuffers(1, &skyboxVBO);
+	glBindVertexArray(skyboxVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+	const std::vector<std::string>& faces
+	{
+		"Content/Textures/Skybox/Lake/right.jpg",
+		"Content/Textures/Skybox/Lake/left.jpg",
+		"Content/Textures/Skybox/Lake/top.jpg",
+		"Content/Textures/Skybox/Lake/bottom.jpg",
+		"Content/Textures/Skybox/Lake/front.jpg",
+		"Content/Textures/Skybox/Lake/back.jpg"
+	};
+	
+	TextureID3 = TextureManager::GetInstance().LoadCubeMap(faces);
+
+	SkyboxShader = new Shader("Source/Shaders/Skybox/");
+	SkyShaderProgram = SkyboxShader->GetShaderprogramID();
+	
+	
+	glUseProgram(ShaderProgram);
+	DefaultShader->SetInt("Texture1", 0);
+	
+	glUseProgram(SkyShaderProgram);
+	SkyboxShader->SetInt("skybox", 0);
+
 }
 
 void CEngine::HandleEvents()
@@ -185,14 +265,41 @@ void CEngine::Start()
 		HandleEvents();
 
 		Camera->Update(DeltaTime);
+		glm::mat4 view = glm::lookAt(Camera->GetPosition(), Camera->GetPosition() + Camera->GetForwardVector(), Camera->GetUpVector());
+		glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+
+		 //draw skybox as last
+		glDepthMask(GL_FALSE);  // change depth function so depth test passes when values are equal to depth buffer's content
+		glUseProgram(SkyShaderProgram);
+		view = glm::mat4(glm::mat3(view)); // remove translation from the view matrix
+		SkyboxShader->SetMat4("view", view);
+		SkyboxShader->SetMat4("projection", projection);
+		// skybox cube
+		glBindVertexArray(skyboxVAO);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, TextureID3);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glBindVertexArray(0);
+		glDepthMask(GL_TRUE); // set depth function back to default
 
 
-		glm::mat4 View = glm::mat4(1.0f);
-		View = glm::lookAt(Camera->GetPosition(), Camera->GetPosition() + Camera->GetForwardVector(), Camera->GetUpVector());
-		DefaultShader->SetMat4("view", View);
 
-		CubeMesh->Render();
+		glUseProgram(ShaderProgram);
 
+		view = glm::lookAt(Camera->GetPosition(), Camera->GetPosition() + Camera->GetForwardVector(), Camera->GetUpVector());
+		projection = glm::perspective(glm::radians(45.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+
+		DefaultShader->SetMat4("view", view);
+		DefaultShader->SetMat4("projection", projection);
+		// cubes
+		glBindVertexArray(CubeMesh->GetVAO());
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, TextureID);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glBindVertexArray(0);
+
+		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+		// -------------------------------------------------------------------------------
 		glfwSwapBuffers(mWindow);
 		glfwPollEvents();
 	}

@@ -35,11 +35,16 @@ private:
 
 private:
 	unsigned int ShaderProgram;
+	unsigned int SkyShaderProgram;
 	unsigned int TextureID;
 	unsigned int TextureID2;
+	unsigned int TextureID3;
+
+	unsigned int skyboxVAO;
 
 	GLFWwindow	*mWindow;
 	Mesh		*CubeMesh;
 	Shader		*DefaultShader;
+	Shader		*SkyboxShader;
 	CCamera		*Camera;
 };

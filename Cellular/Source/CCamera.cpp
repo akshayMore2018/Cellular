@@ -15,7 +15,7 @@ CCamera::CCamera()
 	lastX			= SCREEN_WIDTH / 2.0;
 	lastY			= SCREEN_HEIGHT / 2.0;
 	fov				= 45.0f;
-	Speed			= 2.5f;
+	Speed			= 50.0f;
 	
 	UpdateCameraVectors();
 }

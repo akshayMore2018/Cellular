@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
 #include "Texture.h"
+#include <Vector>
 
 class TextureManager
 {
@@ -13,6 +14,7 @@ public:
 	static TextureManager& GetInstance();
 
 	void LoadTexture(const std::string& fileName);
+	unsigned int LoadCubeMap(const std::vector<std::string>& faces);
 	
 	std::map<std::string, Texture*> TextureMap;
 };
