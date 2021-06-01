@@ -1,5 +1,6 @@
 #include "CEngine.h"
 #include <memory>
+#include <assimp/scene.h>
 
 int main()
 {
