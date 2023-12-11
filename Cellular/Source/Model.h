@@ -4,8 +4,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <vector>
-
-class Mesh;
+#include "Mesh.h"
 
 class Model
 {
@@ -21,7 +20,7 @@ private:
 	void ProcessNode(aiNode *node, const aiScene* scene);
 	Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
 	std::vector<TextureData> loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
-	unsigned int TextureFromFile(const char *path, const std::string &directory, bool gamma);
+	unsigned int TextureFromFile(const char *path, const std::string &directory, bool gamma = false);
 
 
 private:

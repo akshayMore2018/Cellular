@@ -25,9 +25,6 @@
     <ClCompile Include="Source\Shader.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\TextureManager.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Mesh.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -46,9 +43,6 @@
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Source\stb_image.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\TextureManager.h">
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Source\Texture.h">

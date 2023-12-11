@@ -13,8 +13,8 @@ Mesh::Mesh(std::vector<Vertex> Vertices, std::vector<unsigned int> Indices, std:
 
 Mesh::~Mesh()
 {
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
+	//glDeleteVertexArrays(1, &VAO);
+	//glDeleteBuffers(1, &VBO);
 }
 
 void Mesh::InitMesh()

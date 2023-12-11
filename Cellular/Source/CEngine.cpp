@@ -3,12 +3,13 @@
 #include <sstream>
 #include "TextureManager.h"
 #include "Shader.h"
-#include "Mesh.h"
+#include "Model.h"
 #include "CCamera.h"
 
 CEngine::CEngine()
 	: mWindow(nullptr)
-	, CubeMesh(nullptr)
+	, mBackPackModel(nullptr)
+	, mVaseModel(nullptr)
 	, DefaultShader(nullptr)
 	, Camera(nullptr)
 {
@@ -17,7 +18,8 @@ CEngine::CEngine()
 
 CEngine::~CEngine()
 {
-	delete CubeMesh;
+	delete mBackPackModel;
+	delete mVaseModel;
 	delete DefaultShader;
 	delete Camera;
 	glfwTerminate();
@@ -59,80 +61,9 @@ void CEngine::InitData()
 {
 	glEnable(GL_DEPTH_TEST);
 
-	if (!TextureManager::GetInstance().TextureMap.count("Content/Textures/Crate.jpg") == 1)
-	{
-		TextureManager::GetInstance().LoadTexture("Content/Textures/Crate.jpg");
-	}
-	Texture* Tex = TextureManager::GetInstance().TextureMap["Content/Textures/Crate.jpg"];
-	if (Tex != nullptr)
-	{
-		TextureID = Tex->GetTextureID();
-	}
-
-
-	if (!TextureManager::GetInstance().TextureMap.count("Content/Textures/Sublime.jpg") == 1)
-	{
-		TextureManager::GetInstance().LoadTexture("Content/Textures/Sublime.jpg");
-	}
-	Tex = TextureManager::GetInstance().TextureMap["Content/Textures/Sublime.jpg"];
-	if (Tex != nullptr)
-	{
-		TextureID2 = Tex->GetTextureID();
-	}
-
 	int AttributeCount;
 	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &AttributeCount);
 	C_LOG("Maximum number of vertex attributes supported :%d\n",AttributeCount);
-
-	std::vector<Vertex> Verts
-	{
-		{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 0.0f)},
-		{glm::vec3( 0.5f, -0.5f, -0.5f), glm::vec2(1.0f, 0.0f)},
-		{glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec2(1.0f, 1.0f)},
-		{glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec2(1.0f, 1.0f)},
-		{glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec2(0.0f, 1.0f)},
-		{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 0.0f)},
-
-		{glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec2(0.0f, 0.0f)},
-		{glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec2(1.0f, 0.0f)},
-		{glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec2(1.0f, 1.0f)},
-		{glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec2(1.0f, 1.0f)},
-		{glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec2(0.0f, 1.0f)},
-		{glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec2(0.0f, 0.0f)},
-
-		{glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec2(1.0f, 0.0f)},
-		{glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec2(1.0f, 1.0f)},
-		{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 1.0f)},
-		{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 1.0f)},
-		{glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec2(0.0f, 0.0f)},
-		{glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec2(1.0f, 0.0f)},
-
-		{glm::vec3(0.5f,  0.5f,  0.5f), glm::vec2(1.0f, 0.0f)},
-		{glm::vec3(0.5f,  0.5f, -0.5f), glm::vec2(1.0f, 1.0f)},
-		{glm::vec3(0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 1.0f)},
-		{glm::vec3(0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 1.0f)},
-		{glm::vec3(0.5f, -0.5f,  0.5f), glm::vec2(0.0f, 0.0f)},
-		{glm::vec3(0.5f,  0.5f,  0.5f), glm::vec2(1.0f, 0.0f)},
-
-		{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 1.0f)},
-		{glm::vec3( 0.5f, -0.5f, -0.5f), glm::vec2(1.0f, 1.0f)},
-		{glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec2(1.0f, 0.0f)},
-		{glm::vec3( 0.5f, -0.5f,  0.5f), glm::vec2(1.0f, 0.0f)},
-		{glm::vec3(-0.5f, -0.5f,  0.5f), glm::vec2(0.0f, 0.0f)},
-		{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec2(0.0f, 1.0f)},
-
-		{glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec2(0.0f, 1.0f)},
-		{glm::vec3( 0.5f,  0.5f, -0.5f), glm::vec2(1.0f, 1.0f)},
-		{glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec2(1.0f, 0.0f)},
-		{glm::vec3( 0.5f,  0.5f,  0.5f), glm::vec2(1.0f, 0.0f)},
-		{glm::vec3(-0.5f,  0.5f,  0.5f), glm::vec2(0.0f, 0.0f)},
-		{glm::vec3(-0.5f,  0.5f, -0.5f), glm::vec2(0.0f, 1.0f)}
-
-	};
-
-
-	CubeMesh = new Mesh();
-	CubeMesh->InitMesh(Verts);
 
 
 	DefaultShader = new Shader("Source/Shaders/");
@@ -140,103 +71,8 @@ void CEngine::InitData()
 
 	Camera = new CCamera();
 	
-	
-	glUseProgram(ShaderProgram);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, TextureID);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, TextureID2);
-	DefaultShader->SetInt("Texture1", 0);
-	DefaultShader->SetInt("Texture2", 1);
-
-
-	glm::mat4 Model = glm::mat4(1.0f);
-	Model = glm::rotate(Model, glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	Model = glm::scale(Model, glm::vec3(15.0f, 1.0f, 15.0f));
-	DefaultShader->SetMat4("model", Model);
-
-	glm::mat4 Projection;
-	Projection = glm::perspective(glm::radians(45.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
-	DefaultShader->SetMat4("projection", Projection);
-
-	//Skybox related stuff
-
-	float skyboxVertices[] = {
-		// positions          
-		-1.0f,  1.0f, -1.0f,
-		-1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-		 1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
-
-		-1.0f, -1.0f,  1.0f,
-		-1.0f, -1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f,  1.0f,
-		-1.0f, -1.0f,  1.0f,
-
-		 1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-
-		-1.0f, -1.0f,  1.0f,
-		-1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f, -1.0f,  1.0f,
-		-1.0f, -1.0f,  1.0f,
-
-		-1.0f,  1.0f, -1.0f,
-		 1.0f,  1.0f, -1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		-1.0f,  1.0f,  1.0f,
-		-1.0f,  1.0f, -1.0f,
-
-		-1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f,  1.0f,
-		 1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f,  1.0f,
-		 1.0f, -1.0f,  1.0f
-	};
-
-
-	unsigned int skyboxVBO;
-	glGenVertexArrays(1, &skyboxVAO);
-	glGenBuffers(1, &skyboxVBO);
-	glBindVertexArray(skyboxVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-
-	const std::vector<std::string>& faces
-	{
-		"Content/Textures/Skybox/Lake/right.jpg",
-		"Content/Textures/Skybox/Lake/left.jpg",
-		"Content/Textures/Skybox/Lake/top.jpg",
-		"Content/Textures/Skybox/Lake/bottom.jpg",
-		"Content/Textures/Skybox/Lake/front.jpg",
-		"Content/Textures/Skybox/Lake/back.jpg"
-	};
-	
-	TextureID3 = TextureManager::GetInstance().LoadCubeMap(faces);
-
-	SkyboxShader = new Shader("Source/Shaders/Skybox/");
-	SkyShaderProgram = SkyboxShader->GetShaderprogramID();
-	
-	
-	glUseProgram(ShaderProgram);
-	DefaultShader->SetInt("Texture1", 0);
-	
-	glUseProgram(SkyShaderProgram);
-	SkyboxShader->SetInt("skybox", 0);
+	mBackPackModel = new Model("Source/Assets/backpack/backpack.obj");
+	mVaseModel = new Model("Source/Assets/marblevase/MarbleVase0022.obj");
 
 }
 
@@ -268,20 +104,6 @@ void CEngine::Start()
 		glm::mat4 view = glm::lookAt(Camera->GetPosition(), Camera->GetPosition() + Camera->GetForwardVector(), Camera->GetUpVector());
 		glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 
-		 //draw skybox as last
-		glDepthMask(GL_FALSE);  // change depth function so depth test passes when values are equal to depth buffer's content
-		glUseProgram(SkyShaderProgram);
-		view = glm::mat4(glm::mat3(view)); // remove translation from the view matrix
-		SkyboxShader->SetMat4("view", view);
-		SkyboxShader->SetMat4("projection", projection);
-		// skybox cube
-		glBindVertexArray(skyboxVAO);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, TextureID3);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		glBindVertexArray(0);
-		glDepthMask(GL_TRUE); // set depth function back to default
-
 
 
 		glUseProgram(ShaderProgram);
@@ -291,12 +113,22 @@ void CEngine::Start()
 
 		DefaultShader->SetMat4("view", view);
 		DefaultShader->SetMat4("projection", projection);
-		// cubes
-		glBindVertexArray(CubeMesh->GetVAO());
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, TextureID);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		glBindVertexArray(0);
+
+
+		glm::mat4 backpackmodel = glm::mat4(1.0f);
+		backpackmodel = glm::translate(backpackmodel, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+		backpackmodel = glm::scale(backpackmodel, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+		DefaultShader->SetMat4("model", backpackmodel);
+		
+		mBackPackModel->Render(*DefaultShader);
+
+		glm::mat4 vasemodel = glm::mat4(1.0f);
+		vasemodel = glm::translate(vasemodel, glm::vec3(10.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+		vasemodel = glm::scale(vasemodel, glm::vec3(3.0f, 3.0f, 3.0f));	// it's a bit too big for our scene, so scale it down
+		DefaultShader->SetMat4("model", vasemodel);
+		
+		mVaseModel->Render(*DefaultShader);
+
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------

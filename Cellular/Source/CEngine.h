@@ -13,7 +13,7 @@
 const int SCREEN_WIDTH	= 1024;
 const int SCREEN_HEIGHT = 768;
 
-class Mesh;
+class Model;
 class Shader;
 class CCamera;
 
@@ -43,7 +43,8 @@ private:
 	unsigned int skyboxVAO;
 
 	GLFWwindow	*mWindow;
-	Mesh		*CubeMesh;
+	Model		*mBackPackModel;
+	Model		*mVaseModel;
 	Shader		*DefaultShader;
 	Shader		*SkyboxShader;
 	CCamera		*Camera;

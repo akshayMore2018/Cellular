@@ -1,4 +1,4 @@
-#include "Mesh.h"
+
 #include "Model.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -8,6 +8,8 @@ Model::Model(std::string const & path, bool gamma)
 	: gammaCorrection(gamma)
 
 {
+	stbi_set_flip_vertically_on_load(true);
+
 	LoadModel(path);
 }
 
@@ -169,7 +171,7 @@ std::vector<TextureData> Model::loadMaterialTextures(aiMaterial * mat, aiTexture
 }
 
 
-unsigned int Model::TextureFromFile(const char * path, const std::string & directory, bool gamma = false)
+unsigned int Model::TextureFromFile(const char * path, const std::string & directory, bool gamma)
 {
 	std::string filename = std::string(path);
 	filename = directory + '/' + filename;
